@@ -2,6 +2,10 @@ from sklearn.cluster import KMeans
 from sklearn.manifold import Isomap
 from sklearn import preprocessing
 
+from c_config import *
+from c_function import *
+from c_operation import *
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -120,4 +124,4 @@ for i in range(len(rate)):
 print(f"Average precision rate: {np.mean(precision)}")
 print(f"Average recall rate: {np.mean(recall)}")
 print(table)
-# plt.show()
+plt.show()
