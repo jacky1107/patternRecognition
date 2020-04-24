@@ -47,7 +47,7 @@ zscore = preprocessing.StandardScaler()
 
 start = 0
 dimensions = []
-features = [functions, functions, localBins, glcms, proportion, covloution]
+features = [functions, functions, localBins, glcms, proportion]
 for i in range(len(features)):
     _, dimension = features[i].shape
     dimensions.append(dimension)
