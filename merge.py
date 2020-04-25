@@ -39,7 +39,7 @@ for i in range(dataSize):
 
 glcms = pickle.load(open("pickle/glcm.pickle", "rb"))
 functions = pickle.load(open("pickle/functions.pickle", "rb"))
-localBins = pickle.load(open("pickle/local_bin.pickle", "rb"))
+localBins = pickle.load(open("local_bin.pickle", "rb"))
 proportion = pickle.load(open("pickle/proportion.pickle", "rb"))
 second_order = pickle.load(open("pickle/second_order.pickle", "rb"))
 

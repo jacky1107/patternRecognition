@@ -4,6 +4,7 @@ from sklearn import preprocessing
 from skimage import morphology
 from skimage import feature
 
+from c_local import *
 from c_function import *
 
 import matplotlib.pyplot as plt
@@ -19,10 +20,10 @@ import os
 
 Test = "no"
 names = []
-clusterSize = 10
+clusterSize = 0
 if clusterSize == 10: path = "Dataset/image"
 elif clusterSize == 5: path = "Dataset/example"
-else: path = "Dataset/1horse"
+else: path = "Dataset/2airplane"
 colors = ['r', 'g', 'b', 'k', 'm']
 currentPath = os.getcwd()
 dataPath = os.path.join(currentPath, path)
@@ -58,7 +59,7 @@ def process_image(data):
     radius = 8
     eps = 1e-7
 
-    space = [img_gray, img_sob]
+    space = [img_gray] #, img_sob]
     h, w = img_gray.shape
     hists = []
     for method, img in enumerate(space):
@@ -66,6 +67,12 @@ def process_image(data):
         entropys, energys = [], []
 
         lbp = feature.local_binary_pattern(img, numPoints, radius, method="uniform")
+        lbp_mask = lbpMasks(img)
+
+        cv2.imshow("img", lbp_mask)
+        cv2.imshow("lbp", lbp)
+        cv2.waitKey(0)
+
         (hist, _) = np.histogram(lbp.ravel(),bins=np.arange(0, numPoints + 3),range=(0, numPoints + 2))
         hist = hist.astype("float")
         hist /= (hist.sum() + eps)
@@ -104,8 +111,4 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
         count.append(image_label)
         print(f"\r{i}, {data[i]}", end="")
 
-# Save features
-print("Saving features")
-pickle_out = open("local_bin.pickle", "wb")
-pickle.dump(X, pickle_out)
-pickle_out.close()
+cv2.destroyAllWindows()
