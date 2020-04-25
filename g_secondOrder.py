@@ -8,7 +8,6 @@ from c_function import *
 import matplotlib.pyplot as plt
 import concurrent.futures
 import multiprocessing
-import pandas as pd
 import numpy as np
 import mahotas
 import shutil
@@ -28,7 +27,7 @@ currentPath = os.getcwd()
 dataPath = os.path.join(currentPath, path)
 data = os.listdir(dataPath)
 dataSize = len(data)
-featureSize = 4 + 4 + 1 + 8
+featureSize = 3
 image = np.zeros((dataSize, 300, 400, 3), dtype="uint8")
 X = np.zeros((dataSize, featureSize))
 
@@ -45,30 +44,25 @@ def process_image(data):
     img_cst = cv2.equalizeHist(img_gray)
 
     img_sob = sobel(img_gray)
+    img_sob = sobel(img_sob)
     img_sob_clr = sobel(img_clr)
+    img_sob_clr = sobel(img_sob_clr)
 
     b, g, r = cv2.split(img_clr)
     h, s, v = cv2.split(img_hsv)
     l, la, lb = cv2.split(img_lab)
     y, cr, cb = cv2.split(img_ycb)
 
-    meanSpace = [img_sob, img_sob_clr, lb, cb]
-    stdSpace = [v, l, la, lb]
-    skewSpace = [img_sob]
-    entropySpace = [b, g, r, s, v, la, cb, img_sob]
+    meanSpace = [img_sob]
+    stdSpace = [img_sob]
+    skewSpace = []
+    entropySpace = [img_sob]
 
     hists = []
-
-    mean = calcCovolution(meanSpace, 25, 25, "mean")
-    std = calcCovolution(stdSpace, 25, 25, "std")
-    skew = calcCovolution(skewSpace, 25, 25, "skew")
-    entropy = calcCovolution(entropySpace, 25, 25, "entropy")
-
-    hists.append(mean)
-    hists.append(std)
-    hists.append(skew)
-    hists.append(entropy)
-
+    hists = features(meanSpace, hists, "mean")
+    hists = features(stdSpace, hists, "std")
+    hists = features(skewSpace, hists, "skew")
+    hists = features(entropySpace, hists, "entropy")
     return hists, img_clr
 
 count = []
@@ -96,15 +90,6 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
 
 # Save features
 print("Saving features")
-pickle_out = open("covloution.pickle", "wb")
+pickle_out = open("convloution.pickle", "wb")
 pickle.dump(X, pickle_out)
 pickle_out.close()
-
-zscore = preprocessing.StandardScaler()
-X = zscore.fit_transform(X)
-
-excel = pd.DataFrame(X)
-writer = pd.ExcelWriter('data.xlsx')
-excel.to_excel(writer, 'page_1', float_format='%.5f')
-writer.save()
-writer.close()

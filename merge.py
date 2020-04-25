@@ -37,17 +37,17 @@ for i in range(dataSize):
     image_label -= 1
     names.append(image_label)
 
-covloution = pickle.load(open("covloution.pickle", "rb"))
 glcms = pickle.load(open("pickle/glcm.pickle", "rb"))
 functions = pickle.load(open("pickle/functions.pickle", "rb"))
 localBins = pickle.load(open("pickle/local_bin.pickle", "rb"))
 proportion = pickle.load(open("pickle/proportion.pickle", "rb"))
+second_order = pickle.load(open("pickle/second_order.pickle", "rb"))
 
 zscore = preprocessing.StandardScaler()
 
 start = 0
 dimensions = []
-features = [functions, functions, localBins, glcms, proportion]
+features = [functions, functions, localBins, glcms, proportion, second_order]
 for i in range(len(features)):
     _, dimension = features[i].shape
     dimensions.append(dimension)
