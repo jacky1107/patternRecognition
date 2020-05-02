@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 
+
 def calcCovolution(space, fh, fw, method):
     lst = []
     for img in space:
@@ -35,10 +36,11 @@ def calcCovolution(space, fh, fw, method):
 
 def features(space, lst, method):
     for img in space:
-        means, stds, skews, flattens = [], [], [], []
+        means, stds, skews, smooth = [], [], [], []
         entropys, energys = [], []
         img_hist = cv2.calcHist([img], [0], None, [256], [0, 256])
         img_hist = img_hist.reshape(-1)
+        img_hist = img_hist[1:]
         means = calcMeans(img_hist, means)
         if method == "mean":
             lst.append(means)
@@ -52,6 +54,16 @@ def features(space, lst, method):
         if method == "entropy":
             entropys = calcEntropys(img_hist, entropys)
             lst.append(entropys)
+        if method == "r":
+            stds = calcStds(img_hist, means, stds)
+            smooth = calcSmooth(img_hist, stds, smooth)
+            lst.append(smooth)
+    return lst
+
+def calcSmooth(hist, stds, lst):
+    std = float(stds[0])
+    r = 1 - ( 1 / (1 + (std ** 2)) )
+    lst.append(r)
     return lst
 
 def calcEntropys(hist, lst):
@@ -100,7 +112,8 @@ def calcSkews(hist, means, stds, lst):
         skew += n
     std = np.array(std)
     std3 = std * std * std
-    skew = skew / std3
+    if std3 != 0: skew = skew / std3
+    else: skew = 0
     skew = float(skew)
     lst.append(skew)
     return lst

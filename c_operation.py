@@ -130,16 +130,6 @@ def normalize(lst, string):
     return lst
 
 
-def maxGrayLevel(img):
-    max_gray_level = 0
-    (height, width) = img.shape
-    for y in range(height):
-        for x in range(width):
-            if img[y][x] > max_gray_level:
-                max_gray_level = img[y][x]
-    return max_gray_level+1
-
-
 gray_level = 8
 
 
@@ -180,8 +170,7 @@ def feature_computer(p):
             Con += (i-j)*(i-j)*p[i][j]
             Asm += p[i][j]*p[i][j]
             Idm += p[i][j]/(1+(i-j)*(i-j))
-            if p[i][j] > 0.0:
-                Eng += p[i][j]*math.log(p[i][j])
+            if p[i][j] > 0.0: Eng += p[i][j]*math.log2(p[i][j])
     return [Asm, Con, Idm, -Eng]
 
 
