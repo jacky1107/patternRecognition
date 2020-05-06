@@ -40,7 +40,6 @@ def features(space, lst, method):
         entropys, energys = [], []
         img_hist = cv2.calcHist([img], [0], None, [256], [0, 256])
         img_hist = img_hist.reshape(-1)
-        img_hist = img_hist[1:]
         means = calcMeans(img_hist, means)
         if method == "mean":
             lst.append(means)

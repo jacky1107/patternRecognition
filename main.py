@@ -80,7 +80,7 @@ second_order = pickle.load(open("pickle/second_order.pickle", "rb"))
 roi_local_bin = pickle.load(open("pickle/roi_local_bin.pickle", "rb"))
 
 features = [
-    functions, functions, localBins, proportion, glcms, second_order, roi_local_bin,
+    functions, proportion, second_order, localBins, glcms, roi_local_bin, functions
 ]
 
 start = 0
@@ -134,8 +134,8 @@ labels = bestLabels
 X_iso = Isomap(n_neighbors=10).fit_transform(X)
 fig, ax = plt.subplots(1, 2, figsize=(8, 4))
 fig.subplots_adjust(top=0.85)
-ax[0].scatter(X_iso[:, 0], X_iso[:, 1], s=8, c=names)
-ax[1].scatter(X_iso[:, 0], X_iso[:, 1], s=8, c=labels)
+ax[0].scatter(X_iso[:, 0], X_iso[:, 1], s=12, c=names, cmap="tab10")
+ax[1].scatter(X_iso[:, 0], X_iso[:, 1], s=12, c=labels, cmap="tab10")
 print("\n")
 
 # Save Image by label
